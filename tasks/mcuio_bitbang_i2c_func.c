@@ -20,7 +20,6 @@
 #include <bathos/jiffies.h>
 #include <bathos/delay.h>
 #include <bathos/circ_buf.h>
-#include <arch/gpio-bitbang-i2c.h>
 #include <tasks/mcuio.h>
 
 #include "mcuio-function.h"
@@ -86,6 +85,8 @@ static struct mcuio_i2c_data {
 #else
 # define GPIO_SCL 7
 #endif
+
+#include <arch/gpio-bitbang-i2c.h>
 
 /*
  * Xfer data register (xfers are limited to 255 bytes)
