@@ -49,9 +49,6 @@ static int pwm_ctrl_rddw(const struct mcuio_range *r, unsigned offset,
 		case 0x00: /* label */
 			memcpy(out, &pwm.label[0], sizeof(*out));
 			flip4((uint8_t*)out);
-				/* FIXME: to be done only if
-				endiennes differs on MPU*/
-
 			break;
 
 		case 0x04: /* capabilities
