@@ -50,11 +50,6 @@ int adc_enabled()
 	return 1;
 }
 
-void flip4(uint8_t *ptr)
-{
-	/* FIXME */
-}
-
 uint32_t adc_sample(const struct adc *adc)
 {
 	regs[ADC0_SC1A] = adc->hw_idx;

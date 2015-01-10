@@ -45,11 +45,6 @@ int adc_enabled()
 	return 1;
 }
 
-void flip4(uint8_t *ptr)
-{
-	/* FIXME */
-}
-
 uint32_t adc_sample(const struct adc *adc)
 {
 	return analogin_read_u16(&ain[adc - adcs]);

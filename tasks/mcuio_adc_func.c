@@ -56,14 +56,11 @@ static int adc_ctrl_rddw(const struct mcuio_range *r, unsigned offset,
 		 * Here, labels are taken from adcs index */
 
 		case 0x00: /* identifier, return AX */
-			id[0] = 'A';
-			id[1] = (idx >= 10) ? '0' + (idx / 10) : '0' + idx;
-			id[2] = (idx >= 10) ? '0' + (idx % 10) : '\0';
-			id[3] = '\0';
+			id[3] = 'A';
+			id[2] = (idx >= 10) ? '0' + (idx / 10) : '0' + idx;
+			id[1] = (idx >= 10) ? '0' + (idx % 10) : '\0';
+			id[0] = '\0';
 			memcpy(out, id, sizeof(id));
-			flip4((uint8_t*)out);
-				/* FIXME: to be done only if
-				endiennes differs on MPU*/
 			break;
 
 		case 0x04: /* flags
