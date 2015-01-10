@@ -33,6 +33,7 @@ ifeq ($(CONFIG_MACH_KL25Z),y)
 LIBARCH_OBJS += $(MACH_SUBDIR)/clock.o $(MACH_SUBDIR)/jiffies.o
 AOBJ += $(MACH_SUBDIR)/idle.o
 AOBJ += $(MACH_SUBDIR)/gpio.o
+AOBJ += $(MACH_SUBDIR)/adc.o
 CFLAGS += -DHAVE_GPIO_EVENTS
 ifeq ($(CONFIG_KL25Z_USB_UART),y)
 AOBJ += $(MACH_SUBDIR)/usb-device.o

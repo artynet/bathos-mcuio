@@ -7,6 +7,7 @@
 #include <bathos/init.h>
 #include <bathos/types.h>
 #include <bathos/gpio.h>
+#include <bathos/adc.h>
 #include <mach/gpio.h>
 
 /* ADCs */
@@ -24,6 +25,17 @@ const struct adc adcs[] = {
 	BATHOS_ADC((uint8_t)PTB3, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A3 */
 	BATHOS_ADC((uint8_t)PTC2, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A4 */
 	BATHOS_ADC((uint8_t)PTC1, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A5 */
+};
+
+#else
+
+const struct adc adcs[] = {
+	BATHOS_ADC( 8, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A0 */
+	BATHOS_ADC( 9, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A1 */
+	BATHOS_ADC(12, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A2 */
+	BATHOS_ADC(13, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A3 */
+	BATHOS_ADC(11, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A4 */
+	BATHOS_ADC(15, BATHOS_ADC_FLAG_NONE, VRES_UV), /* A5 */
 };
 
 #endif
