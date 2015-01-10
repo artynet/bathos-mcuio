@@ -410,6 +410,18 @@
 #define REG_USB0_USBTRC0	(0x4007210c / 1)
 #define REG_USB0_USBFRMADJUST	(0x40072114 / 1)
 
+/* ADC */
+#define ADC0_SC1A		(0x4003b000 / 4)
+#define ADC0_SC1B		(0x4003b004 / 4)
+#define ADC0_CFG1		(0x4003b008 / 4)
+#define ADC0_CFG2		(0x4003b00c / 4)
+#define ADC0_RA			(0x4003b010 / 4)
+#define ADC0_RB			(0x4003b014 / 4)
+#define ADC0_CV1		(0x4003b018 / 4)
+#define ADC0_CV2		(0x4003b01c / 4)
+#define ADC0_SC2		(0x4003b020 / 4)
+#define ADC0_SC3		(0x4003b024 / 4)
+
 extern void clocks_init();
 
 extern void jiffies_init();
