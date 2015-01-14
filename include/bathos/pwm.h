@@ -60,7 +60,11 @@ struct pwm {
 	struct pwm_ops ops;
 };
 
+#ifdef ARCH_IS_HARVARD
 extern const struct pwm PROGMEM pwms[];
+#else
+extern struct pwm pwms[];
+#endif
 
 extern int pwm_enabled(int idx);
 
