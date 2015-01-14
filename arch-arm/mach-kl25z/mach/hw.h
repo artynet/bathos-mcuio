@@ -422,6 +422,13 @@
 #define ADC0_SC2		(0x4003b020 / 4)
 #define ADC0_SC3		(0x4003b024 / 4)
 
+/* PWM */
+#define TPM_SC(t)		((0x40038000 + ((t)*0x1000)) / 4)
+#define TPM_CNT(t)		((0x40038004 + ((t)*0x1000)) / 4)
+#define TPM_MOD(t)		((0x40038008 + ((t)*0x1000)) / 4)
+#define TPM_CN_SC(t, n)	((0x4003800c + ((t)*0x1000) + (8*(n))) / 4)
+#define TPM_CN_V(t, n)		((0x40038010 + ((t)*0x1000) + (8*(n))) / 4)
+
 extern void clocks_init();
 
 extern void jiffies_init();
