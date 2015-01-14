@@ -5,6 +5,7 @@
  */
 
 #include <arch/hw.h>
+#include <arch/bathos-arch.h>
 #include <bathos/pwm.h>
 #include <bathos/bathos.h>
 #include <bathos/pipe.h>
