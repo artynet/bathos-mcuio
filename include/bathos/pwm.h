@@ -58,6 +58,7 @@ struct pwm {
 	uint8_t dir_msk;
 	int duty_reg_l;
 	struct pwm_ops ops;
+	void *priv;
 };
 
 #ifdef ARCH_IS_HARVARD
