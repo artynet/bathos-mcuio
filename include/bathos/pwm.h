@@ -26,8 +26,8 @@ struct pwm_ops {
 	/* mandatory */
 	int (*enable)(struct pwm *pwm);
 	void (*disable)(struct pwm *pwm);
-	uint32_t (*get_period)(); /* multiplier for period */
-	uint32_t (*get_duty)();   /* multiplier for duty */
+	uint32_t (*get_period)(struct pwm *pwm); /* multiplier for period */
+	uint32_t (*get_duty)(struct pwm *pwm);   /* multiplier for duty */
 
 	/* optional */
 	int (*set_period)(struct pwm *pwm, uint32_t val);
@@ -35,8 +35,8 @@ struct pwm_ops {
 	int (*get_polarity)(const struct pwm *pwm);
 	int (*set_polarity)(struct pwm *pwm, uint32_t val);
 
-	void (*init_timer)(void);
-	void (*deinit_timer)(void);
+	void (*init_timer)(struct pwm *pwm);
+	void (*deinit_timer)(struct pwm *pwm);
 };
 
 /* pwm output

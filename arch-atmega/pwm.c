@@ -26,7 +26,7 @@ int pwm_enabled(int idx)
 
 static uint8_t t_ref[];
 
-static void init_timer0(void)
+static void init_timer0(struct pwm *pwm)
 {
 	/* Enable Fast PWM Mode on Timer 0. Period = 4ms, as
 	 set in arch/atmega-32u4.c (pwm can not change it, since Timer 0
@@ -35,7 +35,7 @@ static void init_timer0(void)
 	TCCR0B |= (1 << WGM02);
 }
 
-static void deinit_timer0(void)
+static void deinit_timer0(struct pwm *pwm)
 {
 	/* Disable Fast PWM Mode on timer0 */
 	TCCR0A &= ~((1 << WGM00) | (1 << WGM01));
@@ -62,7 +62,7 @@ static void check_deinit_timer(struct pwm *pwm)
 		pwm->ops.deinit_timer();
 }
 
-static void init_timer1(void)
+static void init_timer1(struct pwm *pwm)
 {
 	/* Enable Fast PWM Mode and WGM 14 on Timer 1. Default period 20ms. */
 	TCCR1A |= (1 << WGM11);
@@ -70,7 +70,7 @@ static void init_timer1(void)
 	ICR1 = 39999;
 }
 
-static void deinit_timer1(void)
+static void deinit_timer1(struct pwm *pwm)
 {
 	/* Disable Fast PWM Mode and clock on timer1 */
 	TCCR1A &= ~(1 << WGM11);
@@ -79,7 +79,7 @@ static void deinit_timer1(void)
 	ICR1 = 0;
 }
 
-static void init_timer3(void)
+static void init_timer3(struct pwm *pwm)
 {
 	/* Enable Fast PWM Mode and WGM 14 on Timer 3. Default period 20ms. */
 	TCCR3A |= (1 << WGM11);
@@ -87,7 +87,7 @@ static void init_timer3(void)
 	ICR3 = 39999;
 }
 
-static void deinit_timer3(void)
+static void deinit_timer3(struct pwm *pwm)
 {
 	/* Disable Fast PWM Mode and clock on timer3 */
 	TCCR3A &= ~(1 << WGM11);
@@ -96,13 +96,13 @@ static void deinit_timer3(void)
 	ICR3 = 0;
 }
 
-static void init_timer4(void)
+static void init_timer4(struct pwm *pwm)
 {
 	/* Set timer4. Default period 16.384ms */
 	TCCR4B |= (1 << CS43) | (1 << CS41) | (1 << CS40);
 }
 
-static void deinit_timer4(void)
+static void deinit_timer4(struct pwm *pwm)
 {
 	/* Reset timer4. */
 	TCCR4B &= ~((1 << CS43) | (1 << CS41) | (1 << CS40));
