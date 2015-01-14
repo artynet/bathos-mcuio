@@ -8,7 +8,7 @@
 #ifndef __KL25Z_HW_FREQ__
 #define __KL25Z_HW_FREQ__
 
-#define CPU_FREQ		(12 * 1000 * 1000)
+#define CPU_FREQ		(12 * 1000 * 1000) /* FIXME: check */
 #define HZ			100
 #define BUS_FREQ		(24 * 1000 * 1000)
 
