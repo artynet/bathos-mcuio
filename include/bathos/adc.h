@@ -8,39 +8,31 @@
 #define __ADC_H__
 
 #include <bathos/stdio.h>
-#include <arch/bathos-arch.h>
-#include <arch/adc.h>
+#include <bathos/pipe.h>
 
-extern const uint32_t num_adc;   /* number of supported adc's */
-extern const uint32_t min_per_us;/* minimum period, in us */
-extern const uint32_t max_mul;   /* max value for multiplier */
+/* Each platform will export one pipe named "adc", driving the global adc
+ * system.
+ * ioctl must be called with bathos_ioctl_data->data filled with the
+ * struct adc_data below.
+ * To read channel-specific data, set ch id for the desired channel.
+ */
 
-#define BATHOS_ADC_FLAG_NONE		0
-#define BATHOS_ADC_FLAG_SIGNED	(1 << 0)
-#define BATHOS_ADC(idx, f, vr) \
-	{.hw_idx = idx, .flags = f, .vref_uv = vr}
-
-struct adc {
-	uint8_t flags;		/* flags, see above defines */
-	uint8_t hw_idx;	/* idx of adc on hw chip */
-	uint32_t vref_uv;	/* Voltage resolution, in microvolts */
+struct adc_data {
+	uint8_t ch; /* adc channel: used by ioctl >= IOCTL_ADC_RD_VAL */
+	void *val;
 };
 
-extern const struct adc adcs[];
+/* These ioctls are for global adc control */
+#define IOCTL_ADC_RD_NUM		0 /* Read number of existing adcs */
+#define IOCTL_ADC_ENABLE		1 /* Global Enable */
+#define IOCTL_ADC_DISABLE		2 /* Global Disable */
+#define IOCTL_ADC_RD_ENABLED		3 /* Read global enable status */
 
-/* To be called at startup */
-extern int adc_init();
-
-/* enable / disable / enabled status */
-extern void adc_en();
-extern void adc_dis();
-extern int adc_enabled();
-
-/* Correct sequence for sampling is: adc_get, adc_sample, adc_release.
- * adc_sample is arch-specific, get and release are partially
- * defined here (see _adc_get and _adc_release) and partially
- * arch-specific */
-
-extern uint32_t adc_sample(const struct adc *adc);
+/* Channel-specific ioctls */
+#define IOCTL_ADC_RD_VAL		16 /* Read sampled value */
+#define IOCTL_ADC_RD_FLAGS		17 /* Read flags */
+#define ADC_FLAG_NONE			0
+#define ADC_FLAG_SIGNED		(1 << 0)
+#define IOCTL_ADC_RD_VREF		18 /* Read Vref */
 
 #endif

@@ -14,17 +14,17 @@
 #define ADMUX_AVCC     (1 << REFS0)
 #define ADMUX_INT_CAP  ((1 << REFS0) | (1 << REFS1))
 
-static inline void adc_en()
+void adc_en()
 {
 	ADCSRA |= (1 << ADEN);
 }
 
-static inline void adc_dis()
+void adc_dis()
 {
 	ADCSRA &= ~(1 << ADEN);
 }
 
-static inline int adc_enabled()
+int adc_enabled()
 {
 	return (ADCSRA & (1 << ADEN)) ? 1 : 0;
 }

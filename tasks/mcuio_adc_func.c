@@ -21,6 +21,7 @@
 
 static const unsigned int PROGMEM u32_length = 4;
 static const unsigned int PROGMEM adcs_ctrl_length = 0xfc0;
+static const unsigned int PROGMEM adc_chip_ctrl_length = (0x40 - 0x8);
 
 static const struct mcuio_func_descriptor PROGMEM adc_descr = {
 	.device = MCUIO_ADC_DEVICE,
@@ -40,52 +41,57 @@ static int adc_ctrl_rddw(const struct mcuio_range *r, unsigned offset,
 {
 	unsigned idx = offset / 0x40;
 	unsigned reg = offset % 0x40;
-	uint8_t id[4];
-	struct adc *adc;
-#ifdef ARCH_IS_HARVARD
-	struct adc _adc;
-	memcpy_p(&_adc, &adcs[idx], sizeof(_adc));
-	adc = &_adc;
-#else
-	adc = &adcs[idx];
-#endif
+	char id[4];
+	struct bathos_pipe *p;
+	int ret = 0;
+	struct adc_data ad;
+	struct bathos_ioctl_data d;
+	ad.val = out;
+	ad.ch = idx;
+	d.data = &ad;
+
+	p = pipe_open("adc", BATHOS_MODE_INPUT, NULL);
+
+	if (!p)
+		return -EIO;
+
 
 	switch(reg) {
 
-		/* FIXME: labels should be configurable.
-		 * Here, labels are taken from adcs index */
-
 		case 0x00: /* identifier, return AX */
+			/* FIXME: labels should be configurable.
+			* Here, labels are taken from adcs index */
 			id[0] = 'A';
 			id[1] = (idx >= 10) ? '0' + (idx / 10) : '0' + idx;
 			id[2] = (idx >= 10) ? '0' + (idx % 10) : '\0';
 			id[3] = '\0';
 			memcpy(out, id, sizeof(id));
 			flip4((uint8_t*)out);
-				/* FIXME: to be done only if
-				endiennes differs on MPU*/
 			break;
 
 		case 0x04: /* flags
 			    * bit 0: signed */
-			*out = adc->flags;
+			d.code = IOCTL_ADC_RD_FLAGS;
+			ret = pipe_ioctl(p, &d);
 			break;
 
 		case 0x08: /* voltage resolution (in uV) */
-			*out = adc->vref_uv;
+			d.code = IOCTL_ADC_RD_VREF;
+			ret = pipe_ioctl(p, &d);
 			break;
 
 		case 0x0c: /* data */
-			if (!adc_enabled())
-				return -EACCES;
-			*out = adc_sample(adc);
+			d.code = IOCTL_ADC_RD_VAL;
+			ret = pipe_ioctl(p, &d);
 			break;
 
 		default:
-			return -EINVAL;
+			ret = -EINVAL;
 	}
 
-	return 0;
+	pipe_close(p);
+
+	return ret;
 }
 
 const struct mcuio_range_ops PROGMEM adc_ctrl_ops = {
@@ -93,28 +99,63 @@ const struct mcuio_range_ops PROGMEM adc_ctrl_ops = {
 	.wr = { NULL, NULL, NULL, NULL, },
 };
 
-static int adc_gen_ctrl_rddw(const struct mcuio_range *r, unsigned offset,
+static int adc_chip_ctrl_rddw(const struct mcuio_range *r, unsigned offset,
 			  uint32_t *out, int fill)
 {
-	*out = adc_enabled();
-	return 0;
+	struct bathos_pipe *p;
+	struct adc_data ad;
+	struct bathos_ioctl_data d;
+	int ret = 0;
+	p = pipe_open("adc", BATHOS_MODE_INPUT, NULL);
+
+	if (!p)
+		return -EIO;
+
+	d.data = &ad;
+	ad.val = out;
+
+	switch (offset) {
+		case (0x08 - 0x08):
+			d.code = IOCTL_ADC_RD_NUM;
+			break;
+		/* FIXME dword 0x10, max value for period multiplier
+		 * (asynchronous flow of adc inputs unsupported yet) */
+		case (0x14 - 0x8):
+			d.code = IOCTL_ADC_RD_ENABLED;
+			break;
+		default:
+			ret = -EINVAL;
+	}
+	if (!ret)
+		ret = pipe_ioctl(p, &d);
+	pipe_close(p);
+	return ret;
 }
 
-static int adc_gen_ctrl_wrdw(const struct mcuio_range *r, unsigned offset,
+static int adc_chip_ctrl_wrdw(const struct mcuio_range *r, unsigned offset,
 			 const uint32_t *__in, int fill)
 {
-	if (*__in) {
-		adc_init();
-		adc_en();
-	}
-	else
-		adc_dis();
-	return 0;
+	struct bathos_pipe *p;
+	struct bathos_ioctl_data d;
+	int ret = 0;
+
+	if (offset != 0x14 - 0x08)
+		return -EINVAL;
+
+	p = pipe_open("adc", BATHOS_MODE_OUTPUT, NULL);
+
+	if (!p)
+		return -EIO;
+
+	d.code = (*__in) ? IOCTL_ADC_ENABLE : IOCTL_ADC_DISABLE;
+	ret = pipe_ioctl(p, &d);
+	pipe_close(p);
+	return ret;
 }
 
-const struct mcuio_range_ops PROGMEM adc_gen_ctrl_ops = {
-	.rd = { NULL, NULL, adc_gen_ctrl_rddw, NULL, },
-	.wr = { NULL, NULL, adc_gen_ctrl_wrdw, NULL, },
+const struct mcuio_range_ops PROGMEM adc_chip_ctrl_ops = {
+	.rd = { NULL, NULL, adc_chip_ctrl_rddw, NULL, },
+	.wr = { NULL, NULL, adc_chip_ctrl_wrdw, NULL, },
 };
 
 static const struct mcuio_range PROGMEM adc_ranges[] = {
@@ -125,33 +166,19 @@ static const struct mcuio_range PROGMEM adc_ranges[] = {
 		.rd_target = &adc_descr,
 		.ops = &default_mcuio_range_ro_ops,
 	},
-	/* dwords 0x8, #ADCs and min period for reads */
+	/* ADC general control */
 	{
 		.start = 0x008,
-		.length = &u32_length,
-		.rd_target = &num_adc,
-		.ops = &default_mcuio_range_ro_ops,
-	},
-	/* dword 0x10, max value for period multiplier */
-	{
-		.start = 0x010,
-		.length = &u32_length,
-		.rd_target = &max_mul,
-		.ops = &default_mcuio_range_ro_ops,
-	},
-	/* dword 0x14, general ADC control */
-	{
-		/* bit 0: enable */
-		.start = 0x014,
-		.length = &u32_length,
+		.length = &adc_chip_ctrl_length,
 		.rd_target = NULL,
-		.ops = &adc_gen_ctrl_ops,
+		.ops = &adc_chip_ctrl_ops,
 	},
+
 	/* dwords starting from 0x40, ADCs status and control */
 	{
 		.start = 0x40,
 		.length = &adcs_ctrl_length,
-		.rd_target = adcs,
+		.rd_target = NULL,
 		.ops = &adc_ctrl_ops,
 	},
 };
