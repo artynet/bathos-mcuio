@@ -39,6 +39,7 @@ static inline struct bathos_dev_ops *__get_dev_ops(struct bathos_dev_ops *ops,
 static void __do_free_pipe(struct bathos_pipe *p)
 {
 	p->dev = NULL;
+	bathos_free_buffer(p, sizeof(struct bathos_pipe));
 }
 
 static struct bathos_pipe *__find_free_pipe(void)
