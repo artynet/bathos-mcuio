@@ -31,18 +31,25 @@ static struct uart_data {
 
 struct bathos_dev __uart_dev;
 
-static int uart_set_baudrate(uint32_t baud)
-{
-	UBRR1 = (THOS_QUARTZ / 16) / baud - 1;
-	return 0;
-}
+struct baudrate {
+	uint32_t ubrr;
+	char *descr; /* needed because printf of val fails for val > 32767 */
+};
+
+static const struct baudrate baud[] = {
+	{16, "115200"},
+	{7,  "250000"},
+};
+
+#define NBAUDRATES ARRAY_SIZE(baud)
+
+static uint8_t baud_idx = 1;
 
 static int uart_init(void)
 {
-	/* Target baud rate = 250000 */
-	uint32_t baud = 250000;
-	uart_set_baudrate(baud);
+	UBRR1 = baud[baud_idx].ubrr;
 	uart_data.cbuf.head = uart_data.cbuf.tail = 0;
+	UCSR1A = (1 << U2X1);
 	UCSR1B = (1 << RXEN1) | (1 << TXEN1) | (1 << RXCIE1);
 	return 0;
 }
@@ -142,19 +149,6 @@ struct bathos_dev __uart_dev __attribute__((section(".bathos_devices"),
 };
 
 /* baudrate command */
-#define NBAUDRATES 2
-
-struct baudrate {
-	uint32_t val;
-	char *descr; /* needed because printf of val fails for val > 32767 */
-};
-
-static const struct baudrate PROGMEM baud[NBAUDRATES] = {
-	{125000, "125000"},
-	{250000, "250000"}
-};
-
-static uint8_t baud_idx = 1;
 
 static int baudrate_handler(int argc, char *argv[])
 {
@@ -168,7 +162,7 @@ static int baudrate_handler(int argc, char *argv[])
 		}
 		else {
 			baud_idx = i;
-			uart_set_baudrate(baud[i].val);
+			UBRR1 = baud[baud_idx].ubrr;
 		}
 	}
 
