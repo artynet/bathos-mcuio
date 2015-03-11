@@ -39,6 +39,7 @@ struct baudrate {
 static const struct baudrate baud[] = {
 	{16, "115200"},
 	{7,  "250000"},
+	{3,  "500000"},
 };
 
 #define NBAUDRATES ARRAY_SIZE(baud)
