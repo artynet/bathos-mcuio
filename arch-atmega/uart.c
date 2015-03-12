@@ -37,14 +37,14 @@ struct baudrate {
 };
 
 static const struct baudrate baud[] = {
-	{16, "115200"},
 	{7,  "250000"},
 	{3,  "500000"},
+	{16, "115200"},
 };
 
 #define NBAUDRATES ARRAY_SIZE(baud)
 
-static uint8_t baud_idx = 1;
+static uint8_t baud_idx = 0;
 
 static int uart_init(void)
 {
