@@ -81,7 +81,8 @@ enum usb_uart_mux_mode {
 #define USB_UART_MODE_SWITCH 0x1d
 
 /* Switch command from mips: 0xaa */
-#define UART_MODE_SWITCH_MIPS 0xaa
+#define UART_MODE_SWITCH_MIPS_BASE 0xaa
+#define N_MCUIO_BAUD 2
 
 /* Buffer length for dynamic allocation */
 #define PIPE_BUF_SIZE 64
@@ -143,14 +144,17 @@ struct bathos_dev __uart_mux_dev __attribute__((section(".bathos_devices"),
 	.ops = &uart_mux_yun_dev_ops,
 };
 
-static void __do_switch_uart(void)
+static void __do_switch_uart(int cmd)
 {
+	unsigned b;
 	uart_data.uart_mode = uart_data.uart_mode == MCUIO ?
 		MIPS_CONSOLE : MCUIO;
 	printf("\r\n%s: switched to uart mode: %s\r\n",
 	       uart_data.uartpipe->dev->name,
 	       uart_data.uart_mode == MCUIO ?
 	       "mcuio" : "mips-console");
+
+	uart_setbaudrate(cmd - UART_MODE_SWITCH_MIPS_BASE);
 }
 
 static void __do_switch_usb_uart(void)
@@ -256,8 +260,10 @@ static void __pipe_input_handle(struct event_handler_data *ed)
 	if (uart_data.uart_mode == MIPS_CONSOLE) {
 		int i;
 		for (i = 0; i < l; i++) {
-			if (buf[i] == UART_MODE_SWITCH_MIPS) {
-				__do_switch_uart();
+			if ((buf[i] >= UART_MODE_SWITCH_MIPS_BASE) &&
+			    (buf[i] < UART_MODE_SWITCH_MIPS_BASE
+					+ N_MCUIO_BAUD)) {
+				__do_switch_uart(buf[i]);
 				break;
 			}
 		}
