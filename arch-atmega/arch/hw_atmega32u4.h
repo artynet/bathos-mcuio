@@ -13,4 +13,7 @@ extern void usb_config(void);
 
 extern void usb_hw_config(void);
 
+/* baudrates list is defined in uart.c */
+extern int uart_setbaudrate(int baud_idx);
+
 #endif /* __HW_ATMEGA32U4_H__ */

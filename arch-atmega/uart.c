@@ -149,23 +149,28 @@ struct bathos_dev __uart_dev __attribute__((section(".bathos_devices"),
 	.ops = &uart_dev_ops,
 };
 
+int uart_setbaudrate(int i)
+{
+	int ret = 0;
+	if ((i < 0) || (i > NBAUDRATES)) {
+		printf("Invalid baudrate: %d\n", i);
+		ret = -EINVAL;
+	}
+	else {
+		baud_idx = i;
+		UBRR1 = baud[baud_idx].ubrr;
+	}
+	return ret;
+}
+
 /* baudrate command */
 
 static int baudrate_handler(int argc, char *argv[])
 {
 	int ret = 0, i;
 
-	if (argc > 1) {
-		i = argv[1][0] - '1';
-		if ((i < 0) || (i > NBAUDRATES)) {
-			printf("Invalid baudrate: %d\n", i);
-			ret = -EINVAL;
-		}
-		else {
-			baud_idx = i;
-			UBRR1 = baud[baud_idx].ubrr;
-		}
-	}
+	if (argc > 1)
+		ret = uart_setbaudrate(argv[1][0] - '1');
 
 	for (i = 0; i < NBAUDRATES; i++) {
 		if (i == baud_idx)
