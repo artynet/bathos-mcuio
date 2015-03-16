@@ -17,12 +17,14 @@
 #include <bathos/types.h>
 #include <bathos/stdio.h>
 #include <arch/hw.h>
+#include <arch/gpio.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <bathos/allocator.h>
 
 #define SPI_BUF_SIZE 64
+#define SPI_INTERRUPT_PIN GPIO_NR(ATMEGA_PORTE, 6)
 
 struct spi_data {
 	struct circ_buf cbufrx;
@@ -55,6 +57,7 @@ static int spi_open(struct bathos_pipe *pipe)
 	SPCR |= (1 << SPIE);
 	spi_data.bufrx = bathos_alloc_buffer(SPI_BUF_SIZE);
 	spi_data.buftx = bathos_alloc_buffer(SPI_BUF_SIZE);
+	gpio_dir(SPI_INTERRUPT_PIN, 1, 0);
 	return 0;
 }
 
@@ -110,6 +113,8 @@ static int spi_write(struct bathos_pipe *pipe, const char *buf, int len)
 			& (SPI_BUF_SIZE - 1);
 	}
 
+	gpio_set(SPI_INTERRUPT_PIN, 1);
+
 	return l;
 }
 
@@ -128,8 +133,10 @@ ISR(SPI_STC_vect, __attribute__((section(".text.ISR"))))
 			data->cbuftx.tail = (data->cbuftx.tail + 1)
 				& (SPI_BUF_SIZE - 1);
 		}
-		else
+		else {
+			gpio_set(SPI_INTERRUPT_PIN, 0);
 			SPDR = 0x00;
+		}
 	}
 
 	else {
