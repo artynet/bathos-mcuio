@@ -27,13 +27,13 @@
 
 #ifdef CONFIG_BOARD_ARDUINOYUN
 #define VENDOR_ID		0x2a03
-#define PRODUCT_ID		0x0041
+#define PRODUCT_ID		0x8041
 #define STR_MANUFACTURER	L"dog hunter"
 #define STR_PRODUCT		L"Arduino Yun"
 #define STR_SERIAL_NUMBER	L"00000"
 #elif defined CONFIG_BOARD_LININOONE
 #define VENDOR_ID		0x2a03
-#define PRODUCT_ID		0x0001
+#define PRODUCT_ID		0x8001
 #define STR_MANUFACTURER	L"dog hunter"
 #define STR_PRODUCT		L"Linino One"
 #define STR_SERIAL_NUMBER	L"00000"
