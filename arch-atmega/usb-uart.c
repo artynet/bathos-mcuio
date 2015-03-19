@@ -37,6 +37,12 @@
 #define STR_MANUFACTURER	L"dog hunter"
 #define STR_PRODUCT		L"Linino One"
 #define STR_SERIAL_NUMBER	L"00000"
+#elif defined CONFIG_BOARD_LININOCHOWCHOW
+#define VENDOR_ID		0x2a03
+#define PRODUCT_ID		0x8002
+#define STR_MANUFACTURER	L"dog hunter"
+#define STR_PRODUCT		L"Linino Chowchow"
+#define STR_SERIAL_NUMBER	L"00000"
 #endif
 
 
