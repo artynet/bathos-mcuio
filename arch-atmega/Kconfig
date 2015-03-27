@@ -30,6 +30,10 @@ config BOARD_ARDUINOYUN
 	prompt "Build for Arduino Yun"
 	bool
 
+config BOARD_ARDUINOYUNMINI
+	prompt "Build for Arduino Yun Mini"
+	bool
+
 config BOARD_LININOONE
 	prompt "Build for Linino One"
 	bool
@@ -183,6 +187,7 @@ config EXTERNAL_BOOTLOADER_PATH
        default "Caterina-Yun.hex" if BOARD_ARDUINOYUN
        default "Caterina-LininoOne.hex" if BOARD_LININOONE
        default "Caterina-LininoChowchow.hex" if BOARD_LININOCHOWCHOW
+       default "Caterina-YunMini.hex" if BOARD_ARDUINOYUNMINI
        help
          Path of hex file containing external bootloader (placed in top 4k of
 	 ATMEGA flash).
