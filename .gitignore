@@ -2,16 +2,13 @@
 *.o
 *.a
 *.map
-*.hex
 /bathos
 /bathos.bin
 configs/yun_defconfig
 configs/one_defconfig
 configs/yunmini_defconfig
 configs/chowchow_defconfig
-configs/trash
 
-*.sh
 *.cmd
 *.o
 .tmp_*
