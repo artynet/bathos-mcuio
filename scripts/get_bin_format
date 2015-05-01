@@ -13,7 +13,7 @@ EOF
 ret=0
 $CC -c -o $src.o $src  || ret=1
 if [ "$ret" = "0" ] ; then
-    $OBJDUMP -h $src.o | grep 'file\ format' | \
+    $OBJDUMP -h $src.o | grep `echo $CC | sed "s/-.*//"` | \
 	sed -e 's/.*[ \t]\([^ \t]\)/\1/' >$out 2>&1 || ret=1
 fi
 

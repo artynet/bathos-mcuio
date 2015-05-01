@@ -162,7 +162,7 @@ $(GPIOS_CAPS_FILE): tasks/%-caps.o: tasks/%.cfg
 	scripts/gen_gpios_capabilities $$(scripts/get_bin_format) $< $@
 
 clean:
-	rm -f bathos.bin bathos *.o *~
+	rm -vf bathos.bin bathos bathos-*.hex *.o *~ arch-atmega/*.o arch-atmega/bootloader.bin arch-atmega/bootloader.lds
 	find . -name '*.o' -o -name '*~' -o -name '*.a' | \
 		grep -v scripts/kconfig | xargs rm -f
 
