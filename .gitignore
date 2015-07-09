@@ -16,6 +16,7 @@ configs/chowchow_defconfig
 .config.old
 include/config
 include/generated
+out/*
 
 scripts/allocator_aux_gen
 lib/allocator-tables.c
