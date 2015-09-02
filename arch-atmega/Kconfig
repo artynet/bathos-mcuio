@@ -38,8 +38,8 @@ config BOARD_LININOONE
 	prompt "Build for Linino One"
 	bool
 
-config BOARD_LININOCHOWCHOW
-	prompt "Build for Linino Chowchow"
+config BOARD_LININOLEI
+	prompt "Build for Linino Lei"
 	bool
 
 config BOARD_LININOCHIWAWA
@@ -190,7 +190,7 @@ config EXTERNAL_BOOTLOADER_PATH
        depends on ADD_EXTERNAL_BOOTLOADER
        default "Caterina-Yun.hex" if BOARD_ARDUINOYUN
        default "Caterina-LininoOne.hex" if BOARD_LININOONE
-       default "Caterina-LininoChowchow.hex" if BOARD_LININOCHOWCHOW
+       default "Caterina-LininoLei.hex" if BOARD_LININOCHOWCHOW
        default "Caterina-YunMini.hex" if BOARD_ARDUINOYUNMINI
        default "Caterina-Chiwawa.hex" if BOARD_LININOCHIWAWA
        help
