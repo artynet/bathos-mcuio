@@ -192,7 +192,7 @@ config EXTERNAL_BOOTLOADER_PATH
        default "Caterina-LininoOne.hex" if BOARD_LININOONE
        default "Caterina-LininoLei.hex" if BOARD_LININOCHOWCHOW
        default "Caterina-YunMini.hex" if BOARD_ARDUINOYUNMINI
-       default "Caterina-Chiwawa.hex" if BOARD_LININOCHIWAWA
+       default "Caterina-LininoChiwawa.hex" if BOARD_LININOCHIWAWA
        help
          Path of hex file containing external bootloader (placed in top 4k of
 	 ATMEGA flash).
