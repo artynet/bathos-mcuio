@@ -51,7 +51,7 @@
 #define STR_SERIAL_NUMBER	L"00000"
 #elif defined CONFIG_BOARD_LININOCHIWAWA
 #define VENDOR_ID		0x2a03
-#define PRODUCT_ID		0x0003
+#define PRODUCT_ID		0x8003
 #define STR_MANUFACTURER	L"dog hunter"
 #define STR_PRODUCT		L"Linino Chiwawa"
 #define STR_SERIAL_NUMBER	L"00000"
