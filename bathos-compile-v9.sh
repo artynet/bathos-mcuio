@@ -20,6 +20,8 @@ build () {
 
 finalise () {
 
+HASH=`git rev-parse --short HEAD`
+
 cd out/
 
 HEX="bathos-yunmini.hex"
@@ -33,7 +35,13 @@ then
 	mv -v $HEX bathos-yun-mini.hex
 fi
 
+echo ""
+
+zip -r ../bathos-arty-$HASH.zip .
+
 cd ../
+
+md5sum bathos-arty-$HASH.zip > bathos-arty-$HASH.zip.md5
 
 echo ""
 echo "Finished ! ! !"
@@ -42,6 +50,9 @@ echo ""
 }
 
 boards=('yun' 'one' 'lei' 'yunmini' 'chiwawa')
+
+echo ""
+rm -v *.zip *.md5 2> /dev/null
 
 if [ -e .config ]
 then
