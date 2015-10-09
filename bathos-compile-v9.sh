@@ -37,6 +37,8 @@ fi
 
 echo ""
 
+md5sum *.hex >> bathos-"$HASH".md5
+
 zip -r ../bathos-arty-$HASH.zip .
 
 cd ../

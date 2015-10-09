@@ -13,6 +13,8 @@ configs/chowchow_defconfig
 *.o
 .tmp_*
 .config
+*.zip
+*.md5
 .config.old
 include/config
 include/generated
