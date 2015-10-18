@@ -51,6 +51,8 @@ echo ""
 
 }
 
+[ -z `which avr-gcc` ] && echo "avr-gcc is not residing in your system PATH !" && exit 1
+
 boards=('yun' 'one' 'lei' 'yunmini' 'chiwawa')
 
 echo ""
@@ -64,7 +66,7 @@ fi
 if [ -d out/ ]
 then
 	echo ""
-	rm -vf out/bathos-*.hex
+	rm -vf out/bathos-*.hex out/*.md5
 fi
 
 echo ""
