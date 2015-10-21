@@ -42,8 +42,8 @@ config BOARD_LININOLEI
 	prompt "Build for Linino Lei"
 	bool
 
-config BOARD_LININOCHIWAWA
-	prompt "Build for Linino Chiwawa"
+config BOARD_ARDUINOCHIWAWA
+	prompt "Build for Arduino Chiwawa"
 	bool
 
 endchoice
