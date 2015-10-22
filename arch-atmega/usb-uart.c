@@ -53,7 +53,7 @@
 #define VENDOR_ID		0x2a03
 #define PRODUCT_ID		0x8056
 #define STR_MANUFACTURER	L"dog hunter"
-#define STR_PRODUCT		L"Arduino Chiwawa"
+#define STR_PRODUCT		L"Arduino Industrial 101"
 #define STR_SERIAL_NUMBER	L"00000"
 #endif
 
