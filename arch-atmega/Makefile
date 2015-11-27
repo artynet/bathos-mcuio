@@ -94,7 +94,10 @@ $(ADIR)/bootloader.lds:
 	echo "" > $@
 endif
 
-clean: cleanhex
+clean: cleanhex cleanbootloader
+
+cleanbootloader:
+	rm -f $(ARCH_EXTRA) $(ADIR)/bootloader.bin
 
 cleanhex:
 	rm -f bathos.hex
